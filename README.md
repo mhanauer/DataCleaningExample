@@ -24,4 +24,32 @@ mccsc = mccsc[-c(1:2), ]; head(mccsc)
 rbbcsc = mccsc[-c(1:2), ]; head(mccsc)
 
 ```
+Next select only the professional development questions for sel for each district and type of staff
+```{r}
+mccsc = mccsc[c("Q1_6", "Q44")]; head(mccsc)
+rbbcsc = rbbcsc[c("Q1_6", "Q15")]; head(rbbcsc)
+```
 Next figure out how to tranform the likert scale into 1:7 numbers
+```{r}
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Strongly agree", 7, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Agree", 6, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Somewhat agree", 5, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Neither agree nor disagree", 4, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Somewhat disagree", 3, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Disagree", 2, x)}); mccsc
+mccsc = as.data.frame(mccsc)
+mccsc = apply(mccsc, 1, function(x){ifelse(x == "Strongly disagree", 1, x)}); mccsc
+mccsc = as.data.frame(mccsc); mccsc
+```
+
+
+Next just grab secondary or primary school teacher
+
+Next combine the results
+
+
