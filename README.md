@@ -22,6 +22,53 @@ Next we delete the first two rows in the data set.
 ```{r}
 mccsc = mccsc[-c(1:2), ]; head(mccsc)
 rbbcsc = mccsc[-c(1:2), ]; head(mccsc)
-
+```
+Next select only the professional development questions for sel for each district and type of staff.  We create three different variables one with both variables of interest, one for seperate for each variable of interest.
+```{r}
+mccsc1 = mccsc[c("Q1_6", "Q44")]; head(mccsc)
+mccsc2 = mccsc[c("Q1_6")]
+mccsc3 = mccsc[c("Q44")]
 ```
 Next figure out how to tranform the likert scale into 1:7 numbers
+```{r}
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Strongly agree", 7, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Agree", 6, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Somewhat agree", 5, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Neither agree nor disagree", 4, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Somewhat disagree", 3, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Disagree", 2, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2)
+mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Strongly disagree", 1, x)}); mccsc2
+mccsc2 = as.data.frame(mccsc2); mccsc2
+```
+Next we create three levels for the types of professional staff.  We create three levels  Primary school teacher, Secondary school teacher, and other.  What we have here are people who sole job is a primary or secondary school teacher
+
+```{r}
+mccsc3 = apply(mccsc3, 1, function(x){ifelse(x == "Primary school teacher", 1, x)}); mccsc3
+mccsc3 = as.data.frame(mccsc3); mccsc3
+mccsc3 = apply(mccsc3, 1, function(x){ifelse(x == "Secondary school teacher", 2, x)}); mccsc3
+mccsc3 = as.data.frame(mccsc3); mccsc3
+```
+Next combine the results
+```{r}
+mccsc4 = cbind(mccsc2, mccsc3); mccsc4
+```
+Next grab only the primary and secondary staff
+```{r}
+mccsc5 = mccsc4[mccsc4$mccsc3 %in% c(1,2), ]
+mccsc5
+```
+Next run BEST program
+
+
+Next combine RBBCSC and MCCSC
+
+
+
+
+
