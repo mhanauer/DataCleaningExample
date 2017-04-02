@@ -7,63 +7,56 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-Here is an example cleaning a data from a survey that we from a local school district in Bloomington, IN.  
+Here is an example of how to clean data from a survey using data from a local school district in Indiana.  
 ```{r}
 setwd("~/Desktop")
-mccsc = read.csv("MCCSCStaffSurvey.csv", header = TRUE); head(mccsc)
+district = read.csv("MCCSCStaffSurvey.csv", header = TRUE); head(district)
 ```
-When we exported the data from qualtrics, the first rows, were additionally information that qualtrics provides that is not relevant to the study.  Therefore, we deleted the first two rows across all the variables.
+First, we visually inspected the data to see if Qualtrics, the survey program that we used, provided any additional data that we did not need for the analysis. When we exported the data from qualtrics, the first two rows were additional information that qualtrics provides that is not relevant to the study.  Therefore, we deleted the first two rows across all the variables.
 ```{r}
-mccsc = mccsc[-c(1:2), ]; head(mccsc)
+district = district[-c(1:2), ]; head(district)
 ```
-Next we select the variables from the dataset that we are interested in analyzing.  In this case, we are interested in evaluting the differences between the perceptions of current professional development for Social and Emotional learning of staff who are exclusively primary and secondary teachers.  Therefore, we must selet the two appropriate variables for this research question.  
+Next we selected the variables from the dataset that we were interested in analyzing.  In this case, we were interested in evaluating the differences between the perceptions of current professional development for Social and Emotional learning of staff who are exclusively primary and secondary teachers.  Therefore, we selected Q44, which is a categorical variable identifying the type of staff (e.g. primary, secondary, principal).  Then we selected Q1_6 which provided Likert Scale responses to pro.  
 
 ```{r}
-mccsc2 = mccsc[c("Q1_6")]
-mccsc3 = mccsc[c("Q44")]
+district2 = district[c("Q1_6")]
+district3 = district[c("Q44")]
 ```
-Because the responses to their perceptions of professional development are in a Likert Scale format, we need to transform each of the responses into a numerical value so we can conduct data analysis with them.  We use the apply function.  The apply function is a more compact form of an if statement that allows us to tranform the categorical responses (e.g. Strongly agree) into numerical ones.  In the first example, we changing the value Strongly agree is transformed into a 7.  We then need to transform that back into a data frame after we apply the apply function so that we can change the other categorical responses into numbers.  Although, there is likely a more efficient way for transforming the data, the strategy presented below does work and can be more intutive than a large for loop trying to make all of these changes at once. 
+Because the responses to their perceptions of professional development are in a Likert Scale format, we need to transform each of the responses into a numerical value so we can conduct data analysis with them.  We transformed the data using the apply function.  The apply function is a more compact form of an if else statement that allows us to transform the categorical responses (e.g. Strongly agree) into numerical ones.  In the first example, the value Strongly agree is transformed into a 7 and all other values stay the same.  We then need to transform that back into a data frame after we apply the apply function so that we can change the other categorical responses into numbers.  Although, there is likely a more efficient way for transforming the data, the strategy presented below does work and can be more intuitive than a large for loop trying to make all of these changes at once. 
 ```{r}
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Strongly agree", 7, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Agree", 6, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Somewhat agree", 5, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Neither agree nor disagree", 4, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Somewhat disagree", 3, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Disagree", 2, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2)
-mccsc2 = apply(mccsc2, 1, function(x){ifelse(x == "Strongly disagree", 1, x)}); mccsc2
-mccsc2 = as.data.frame(mccsc2); mccsc2
+district2 = apply(district2, 1, function(x){ifelse(x == "Strongly agree", 7, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Agree", 6, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Somewhat agree", 5, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Neither agree nor disagree", 4, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Somewhat disagree", 3, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Disagree", 2, x)}); district2
+district2 = as.data.frame(district2)
+district2 = apply(district2, 1, function(x){ifelse(x == "Strongly disagree", 1, x)}); district2
+district2 = as.data.frame(district2); district2
 ```
-Next we create numerical indexs for the Primary school teacher (1) and Secondary school teachers (2).  Again we use the apply function.  It will be become clear why we created the numerical indexs later in the example.
+Next we create numerical indexes for the Primary school teachers (1) and Secondary school teachers (2) so that we can select Likert scale responses for those two groups of staff.  Again we use the apply function.
 
 ```{r}
-mccsc3 = apply(mccsc3, 1, function(x){ifelse(x == "Primary school teacher", 1, x)}); mccsc3
-mccsc3 = as.data.frame(mccsc3); mccsc3
-mccsc3 = apply(mccsc3, 1, function(x){ifelse(x == "Secondary school teacher", 2, x)}); mccsc3
-mccsc3 = as.data.frame(mccsc3); mccsc3
+district3 = apply(district3, 1, function(x){ifelse(x == "Primary school teacher", 1, x)}); district3
+district3 = as.data.frame(district3); district3
+district3 = apply(district3, 1, function(x){ifelse(x == "Secondary school teacher", 2, x)}); district3
+district3 = as.data.frame(district3); district3
 ```
-Now that we have data coded for each of variables of interest, we can combine them back into one data frame using the cbind funciton.
+Now that we have data coded for each of the variables of interest, we can combine them back into one data frame using the cbind function.
 ```{r}
-mccsc4 = cbind(mccsc2, mccsc3); mccsc4
+district4 = cbind(district2, district3); district4
 ```
-Finally, we grab data where a respondent is either a primary (1) or secondary teacher exclusively.  Because those staff members are coded as 1 or 2, we can grab data for those two groups using the subsetting logic displayed below.
+Finally, we grab data where a respondent is either a primary (1) or secondary teacher (2) exclusively.  Because those staff members are coded as 1 or 2, we can grab data for those two groups using the subsetting logic displayed below.
 ```{r}
-mccsc5 = mccsc4[mccsc4$mccsc3 %in% c(1,2), ]
-mccsc5
+district5 = district4[district4$district3 %in% c(1,2), ]
+district5
 ```
 Finally, we create a csv file that can be used in data analysis.
 ```{r}
-write.csv(mccsc5, "mccsc5.csv")
+write.csv(district5, "district5.csv")
 ```
-
-
-
-
-
-
-
